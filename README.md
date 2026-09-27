@@ -1,78 +1,49 @@
-# CRUD Students & Pets (FastAPI)
+# 🍔 Food Cart API - Backend para Carrito de Comida
 
-Proyecto FastAPI que implementa un **CRUD en memoria** para la entidad `Student` y sus mascotas (`Pet`). No requiere base de datos ni contenedores: los datos viven en un diccionario dentro del servicio y se pierden al reiniciar la aplicación.
+Bienvenido al repositorio de **Food Cart API**, la solución backend desarrollada en FastAPI para la gestión de pedidos, productos y clientes de un carrito de comida rápida.
 
-## Requerimientos
+Este proyecto implementa una API RESTful construida bajo los principios de **Arquitectura en Capas** (Layered Architecture) y almacenamiento en memoria, diseñada para ser escalable, desacoplada y fácil de mantener.
 
-- Python 3.13+ (gestionado automáticamente por [uv](https://docs.astral.sh/uv/))
-- uv
+---
 
-## Resumen funcional
+## 🛠️ Arquitectura y Estructura del Proyecto
 
-La API expone operaciones CRUD completas:
+El sistema fue diseñado aplicando la separación de responsabilidades para garantizar un código limpio y modular:
 
-- **Estudiantes** bajo `/api/students`:
-    - **Crear**: `POST /api/students`
-    - **Listar**: `GET /api/students`
-    - **Buscar por id**: `GET /api/students/:id`
-    - **Actualizar**: `PATCH /api/students/:id`
-    - **Eliminar**: `DELETE /api/students/:id` (también elimina sus mascotas)
-- **Mascotas** anidadas bajo `/api/students/:studentId/pets`:
-    - **Listar**: `GET /api/students/:studentId/pets`
-    - **Crear**: `POST /api/students/:studentId/pets`
-    - **Actualizar**: `PATCH /api/students/:studentId/pets/:petId`
-    - **Eliminar**: `DELETE /api/students/:studentId/pets/:petId`
+- **Capa de API** (`app/api`): Expone los endpoints HTTP, maneja los códigos de estado (`200 OK`, `201 Created`, `400 Bad Request`, `404 Not Found`, etc.) y la documentación interactiva OpenAPI/Swagger.
+- **Capa de Servicios** (`app/services`): Contiene la lógica de negocio principal (cálculo de totales, aplicación de reglas de negocio, validación de flujo de estados).
+- **Capa de Dominio** (`app/domain`): Define las entidades puras del sistema y las reglas del modelo de datos.
+- **Capa de Esquemas / DTOs** (`app/schemas`): Utiliza Pydantic para la entrada y salida de datos, asegurando la validación estricta de tipos y formatos.
+- **Capa de Persistencia / Repositorios** (`app/db`): Implementa el patrón Repository para gestionar los datos en memoria (diccionarios/listas) sin acoplarse a una base de datos física.
 
-Cada estudiante tiene `id` (UUID), `name`, `email`, `age`, `createdAt` y `updatedAt`. El `email` es único: se rechaza con `409 Conflict` si ya existe.
+---
 
-Cada mascota tiene `id` (UUID), `studentId`, `name`, `species`, `age` (opcional), `createdAt` y `updatedAt`. Solo puede operar sobre su estudiante dueño.
+## 🌟 Funcionalidades Principales
 
-Las respuestas devuelven los datos crudos, sin envoltorios. Los errores de validación usan el formato nativo de FastAPI (`422`) y las excepciones HTTP los códigos estándar (`404`, `409`).
+### 1. Gestión de Productos (CRUD Completo):
+- Crear, listar, consultar por ID, actualizar y eliminar productos del menú.
 
-## Contexto técnico
+### 2. Consultas Avanzadas (Filtro, Ordenamiento y Paginación):
+- Endpoint de listado optimizado para aplicar filtros por categoría, ordenamiento por precio o nombre, y paginación en un solo Request.
 
-- **Backend**: FastAPI
-- **Almacenamiento**: en memoria (sin persistencia)
-- **Validación**: Pydantic v2
-- **Gestor de dependencias**: uv
-- **Documentación**: Swagger en `/docs`
+### 3. Gestión de Pedidos y Reglas de Negocio:
+- Control de flujo para el cambio de estado de comandas (`pendiente` ➔ `en_preparacion` ➔ `listo` ➔ `entregado`).
+- Validaciones automáticas de stock y límites de consumo.
 
-## Ejecución local
+### 4. Manejo Global de Errores:
+- Respuestas JSON estandarizadas ante excepciones o datos inválidos (código `422` / `400`).
 
-1. Instalar dependencias:
+---
 
-    ```bash
-    make install
-    ```
+## 🚀 Cómo Ejecutar el Proyecto Localmente
 
-    O directamente con uv:
+### Prerrequisitos
+- Python 3.9 o superior instalado.
 
-    ```bash
-    uv sync
-    ```
+### Pasos de Instalación
 
-2. Levantar el servidor en modo desarrollo:
-
-    ```bash
-    make dev
-    ```
-
-    O usando uv:
-
-    ```bash
-    uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 3000
-    ```
-
-La aplicación queda disponible en:
-
-- `http://localhost:3000`
-- `http://localhost:3000/docs`
-
-## Comandos útiles
-
-- `make install` — sincroniza dependencias con uv
-- `make dev` — arranca uvicorn en modo reload
-- `make lint` — ejecuta Ruff (con autocorrección)
-- `make format` — formatea el código con Ruff
-- `make format-check` — verifica el formato
-- `make clean` — elimina `.venv`, cachés y artefactos
+1. **Clonar el repositorio:**
+   ```bash
+   git clone <URL_DE_TU_REPOSITORIO>
+   cd foodcart_api!
+   ```
