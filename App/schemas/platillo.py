@@ -18,12 +18,12 @@ class PlatilloCreate(PlatilloBase):
     pass
 
 class PlatilloUpdate(BaseModel):
-    nombre: Optional[str] = None
+    nombre: Optional[str] = Field(None, min_length=3, max_length=50)
     categoria: Optional[str] = None
-    precio_restaurante: Optional[float] = None
-    tiempo_restaurante_min: Optional[int] = None
-    costo_estimado_casa: Optional[float] = None
-    tiempo_casa_min: Optional[int] = None
+    precio_restaurante: Optional[float] = Field(None, gt=0)
+    tiempo_restaurante_min: Optional[int] = Field(None, gt=0)
+    costo_estimado_casa: Optional[float] = Field(None, gt=0)
+    tiempo_casa_min: Optional[int] = Field(None, gt=0)
 
 class PlatilloResponse(PlatilloBase):
     id: int

@@ -43,3 +43,6 @@ El sistema fue diseñado aplicando la separación de responsabilidades para gara
    ```bash
    git clone <URL_DE_TU_REPOSITORIO>
    cd foodcart_api
+
+### Se modifico el archivo platillos dentro de api\api_v1\endpoint\platillos.py 
+### Con el proposito de mejorar el CRUD 

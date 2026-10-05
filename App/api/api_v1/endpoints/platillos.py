@@ -3,7 +3,7 @@ from typing import List, Optional
 from App.schemas.platillo import PlatilloCreate, PlatilloResponse, PlatilloUpdate
 from App.services.platillo_service import PlatilloService
 
-router = APIRouter()
+router = APIRouter() 
 service = PlatilloService()
 
 @router.get("/", response_model=List[PlatilloResponse], status_code=status.HTTP_200_OK)
@@ -23,3 +23,24 @@ async def crear_platillo(platillo_in: PlatilloCreate):
         return service.crear_platillo(platillo_in)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/{platillo_id}", response_model=PlatilloResponse, status_code=status.HTTP_200_OK)
+async def obtener_platillo(platillo_id: int):
+    platillo = service.obtener_platillo(platillo_id)
+    if platillo is None:
+        raise HTTPException(status_code=404, detail="Platillo no encontrado")
+    return platillo
+
+@router.put("/{platillo_id}", response_model=PlatilloResponse, status_code=status.HTTP_200_OK)
+async def actualizar_platillo(platillo_id: int, datos: PlatilloUpdate):
+    platillo = service.actualizar_platillo(platillo_id, datos)
+    if platillo is None:
+        raise HTTPException(status_code=404, detail="Platillo no encontrado")
+    return platillo
+
+@router.delete("/{platillo_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def eliminar_platillo(platillo_id: int):
+    eliminado = service.eliminar_platillo(platillo_id)
+    if not eliminado:
+        raise HTTPException(status_code=404, detail="Platillo no encontrado")
+    return None
