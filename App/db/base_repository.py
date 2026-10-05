@@ -1,7 +1,5 @@
 # app/db/base_repository.py
 from typing import TypeVar, Generic, List, Optional
-from app.domain.base import EntidadBase  # Si usas una base
-
 # 'T' es el tipo de la entidad de dominio (ej: Producto, Pedido)
 T = TypeVar("T")
 
