@@ -1,7 +1,7 @@
 ### Proyecto grupal: diseño e implementación de una API backend (15%)
 
 
-### Anatomia del Proyecto
+### Anatomía del Proyecto
 
 app/
    main.py # crea y configura la aplicación
@@ -24,12 +24,16 @@ requirements.txt o pyproject.tom
 | **Calidad y pruebas** | Verificación funcional de endpoints, casos exitosos y de error, colección de pruebas y revisión del funcionamiento general. |
 | **Documentación e integración** | Swagger/OpenAPI, README, documentación técnica y revisión de la integración de los distintos componentes del proyecto. |
 
+---------------------------------
+
 | Estudiante | Responsabilidad principal |
 | :--- | :--- |
 | **Catalina Ojeda** | Coordinación + documentación e integración |
 | **Sebastián Ulloa** | Dominio y datos |
 | **Scarleth Friz** | API y lógica de negocio |
 | **Genesis Flores** | Calidad y pruebas |
+
+-----------------------------------
 
 ### Respuesta a Errores 
 
