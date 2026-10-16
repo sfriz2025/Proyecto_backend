@@ -4,7 +4,7 @@ from typing import Any, List, Optional
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 
@@ -12,9 +12,9 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 class ErrorCuerpo(BaseModel):
     code: str
     message: str
-    details: List[Any] = []
+    details: List[Any] = Field(default_factory=list)
 
-
+    
 class ErrorResponse(BaseModel):
     error: ErrorCuerpo
 
@@ -27,7 +27,8 @@ class AppError(Exception):
     def __init__(self, message: str, details: Optional[List[Any]] = None):
         super().__init__(message)
         self.message = message
-        self.details = details or []
+        self.details = details if details is not None else []
+
 
 
 class NotFoundError(AppError):
@@ -49,7 +50,7 @@ class BusinessRuleError(AppError):
 def _respuesta(status_code: int, code: str, message: str, details: Optional[List[Any]] = None):
     return JSONResponse(
         status_code=status_code,
-        content={"error": {"code": code, "message": message, "details": details or []}},
+        content={"error": {"code": code, "message": message, "details": details if details is not None else []}},
     )
 
 
