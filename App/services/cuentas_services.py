@@ -2,7 +2,7 @@ from dataclasses import asdict
 from datetime import datetime
 from typing import Optional
 
-from App.core.errors import ConflictError, NotFoundError
+from App.core.errors import BusinessRuleError, ConflictError, NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.cuentas_domain import Cuenta
 from App.repositories.cuentas_repo import CuentaRepository, cuenta_repo
@@ -72,6 +72,20 @@ class CuentaService:
     def actualizar(self, cuenta_id: int, datos: CuentaUpdate) -> CuentaResponse:
         actual = self._obtener_o_404(cuenta_id)
         cambios = datos.model_dump(exclude_unset=True, exclude_none=True)
+        if "presupuesto_mensual" in cambios:
+            hoy = datetime.now()
+            gasto = self.pedidos.gasto_del_mes(cuenta_id, hoy.year, hoy.month)
+
+            if cambios["presupuesto_mensual"] < gasto:
+                raise BusinessRuleError(
+                    "El presupuesto no puede ser menor que el gasto del mes",
+                    [
+                        {
+                            "presupuesto_mensual": cambios["presupuesto_mensual"],
+                            "gasto_mes": gasto,
+                        }
+                    ],
+                )
         if "correo" in cambios:
             cambios["correo"] = cambios["correo"].strip().lower()
             self._validar_correo_unico(cambios["correo"], ignorar_id=cuenta_id)
