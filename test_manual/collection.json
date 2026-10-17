@@ -1,99 +1,86 @@
 {
   "info": {
-    "name": "Colección de Pruebas API - E2",
+    "name": "Pruebas API Pedidos - E2",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Crear Pedido - Exitoso (201)",
+      "name": "Crear Pedido Exitoso",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nombre\": \"Pedido de prueba E2\",\n  \"descripcion\": \"Prueba de integración de API\",\n  \"precio\": 1500,\n  \"categoria\": \"General\"\n}"
+          "raw": "{\n    \"cuenta_id\": 1,\n    \"platillo_id\": 2,\n    \"modalidad\": \"para llevar\",\n    \"cantidad\": 2\n}"
         },
         "url": {
-          "raw": "http://localhost:8000/api/v1/pedidos",
+          "raw": "http://localhost:8000/pedidos",
           "protocol": "http",
           "host": ["localhost"],
           "port": "8000",
-          "path": ["api", "v1", "pedidos"]
+          "path": ["pedidos"]
         }
       }
     },
     {
-      "name": "Obtener Pedido por ID (200)",
+      "name": "Listar con Paginación y Filtros",
       "request": {
         "method": "GET",
-        "header": [
-          { "key": "Accept", "value": "application/json" }
-        ],
+        "header": [],
         "url": {
-          "raw": "http://localhost:8000/api/v1/pedidos/1",
+          "raw": "http://localhost:8000/pedidos?pagina=1&limite=10&direccion=desc",
           "protocol": "http",
           "host": ["localhost"],
           "port": "8000",
-          "path": ["api", "v1", "pedidos", "1"]
-        }
-      }
-    },
-    {
-      "name": "Listar Pedidos con Filtros y Paginacion (200)",
-      "request": {
-        "method": "GET",
-        "header": [
-          { "key": "Accept", "value": "application/json" }
-        ],
-        "url": {
-          "raw": "http://localhost:8000/api/v1/pedidos?page=1&limit=10&sort=desc",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8000",
-          "path": ["api", "v1", "pedidos"],
+          "path": ["pedidos"],
           "query": [
-            { "key": "page", "value": "1" },
-            { "key": "limit", "value": "10" },
-            { "key": "sort", "value": "desc" }
+            { "key": "pagina", "value": "1" },
+            { "key": "limite", "value": "10" },
+            { "key": "direccion", "value": "desc" }
           ]
         }
       }
     },
     {
-      "name": "Error - Validación Body (400)",
+      "name": "Error Validación (422)",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nombre\": \"\",\n  \"precio\": -500\n}"
+          "raw": "{\n    \"cuenta_id\": \"invalido\",\n    \"cantidad\": -5\n}"
         },
         "url": {
-          "raw": "http://localhost:8000/api/v1/pedidos",
+          "raw": "http://localhost:8000/pedidos",
           "protocol": "http",
           "host": ["localhost"],
           "port": "8000",
-          "path": ["api", "v1", "pedidos"]
+          "path": ["pedidos"]
         }
       }
     },
     {
-      "name": "Error - Recurso No Encontrado (404)",
+      "name": "Error No Encontrado (404)",
       "request": {
         "method": "GET",
-        "header": [
-          { "key": "Accept", "value": "application/json" }
-        ],
+        "header": [],
         "url": {
-          "raw": "http://localhost:8000/api/v1/pedidos/9999",
+          "raw": "http://localhost:8000/pedidos/9999",
           "protocol": "http",
           "host": ["localhost"],
           "port": "8000",
-          "path": ["api", "v1", "pedidos", "9999"]
+          "path": ["pedidos"],
+          "path": ["pedidos", "9999"]
         }
       }
     }
