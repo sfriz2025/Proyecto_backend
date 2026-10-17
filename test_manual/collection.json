@@ -1,0 +1,101 @@
+{
+  "info": {
+    "name": "Colección de Pruebas API - E2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Crear Pedido - Exitoso (201)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Pedido de prueba E2\",\n  \"descripcion\": \"Prueba de integración de API\",\n  \"precio\": 1500,\n  \"categoria\": \"General\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "pedidos"]
+        }
+      }
+    },
+    {
+      "name": "Obtener Pedido por ID (200)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/pedidos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "pedidos", "1"]
+        }
+      }
+    },
+    {
+      "name": "Listar Pedidos con Filtros y Paginacion (200)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/pedidos?page=1&limit=10&sort=desc",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "pedidos"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" },
+            { "key": "sort", "value": "desc" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Error - Validación Body (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"\",\n  \"precio\": -500\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "pedidos"]
+        }
+      }
+    },
+    {
+      "name": "Error - Recurso No Encontrado (404)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/pedidos/9999",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "pedidos", "9999"]
+        }
+      }
+    }
+  ]
+}
