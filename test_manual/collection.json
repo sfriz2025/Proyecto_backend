@@ -1,101 +1,174 @@
 {
   "info": {
-    "name": "Colección de Pruebas API - E2",
+    "name": "FoodCart API - Pruebas manuales",
+    "description": "Solicitudes para la API local. La aplicacion usa almacenamiento en memoria; las cuentas 1 y 2 y los platillos 1 y 2 vienen precargados.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:8000" },
+    { "key": "cuentaId", "value": "1" },
+    { "key": "platilloId", "value": "1" },
+    { "key": "pedidoId", "value": "1" }
+  ],
   "item": [
     {
-      "name": "Crear Pedido - Exitoso (201)",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"nombre\": \"Pedido de prueba E2\",\n  \"descripcion\": \"Prueba de integración de API\",\n  \"precio\": 1500,\n  \"categoria\": \"General\"\n}"
+      "name": "Cuentas",
+      "item": [
+        {
+          "name": "Listar cuentas",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{baseUrl}}/cuentas?pagina=1&limite=10&ordenar_por=id&direccion=asc"
+          }
         },
-        "url": {
-          "raw": "http://localhost:8000/api/v1/pedidos",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8000",
-          "path": ["api", "v1", "pedidos"]
-        }
-      }
-    },
-    {
-      "name": "Obtener Pedido por ID (200)",
-      "request": {
-        "method": "GET",
-        "header": [
-          { "key": "Accept", "value": "application/json" }
-        ],
-        "url": {
-          "raw": "http://localhost:8000/api/v1/pedidos/1",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8000",
-          "path": ["api", "v1", "pedidos", "1"]
-        }
-      }
-    },
-    {
-      "name": "Listar Pedidos con Filtros y Paginacion (200)",
-      "request": {
-        "method": "GET",
-        "header": [
-          { "key": "Accept", "value": "application/json" }
-        ],
-        "url": {
-          "raw": "http://localhost:8000/api/v1/pedidos?page=1&limit=10&sort=desc",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8000",
-          "path": ["api", "v1", "pedidos"],
-          "query": [
-            { "key": "page", "value": "1" },
-            { "key": "limit", "value": "10" },
-            { "key": "sort", "value": "desc" }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Error - Validación Body (400)",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"nombre\": \"\",\n  \"precio\": -500\n}"
+        {
+          "name": "Crear cuenta (201)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre_titular\": \"Cuenta de prueba\",\n  \"correo\": \"prueba.foodcart@example.cl\",\n  \"presupuesto_mensual\": 100000\n}"
+            },
+            "url": "{{baseUrl}}/cuentas"
+          }
         },
-        "url": {
-          "raw": "http://localhost:8000/api/v1/pedidos",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8000",
-          "path": ["api", "v1", "pedidos"]
+        {
+          "name": "Ver resumen mensual",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{baseUrl}}/cuentas/{{cuentaId}}/resumen"
+          }
+        },
+        {
+          "name": "Actualizar presupuesto (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"presupuesto_mensual\": 150000\n}" },
+            "url": "{{baseUrl}}/cuentas/{{cuentaId}}"
+          }
         }
-      }
+      ]
     },
     {
-      "name": "Error - Recurso No Encontrado (404)",
-      "request": {
-        "method": "GET",
-        "header": [
-          { "key": "Accept", "value": "application/json" }
-        ],
-        "url": {
-          "raw": "http://localhost:8000/api/v1/pedidos/9999",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8000",
-          "path": ["api", "v1", "pedidos", "9999"]
+      "name": "Platillos y productos",
+      "item": [
+        {
+          "name": "Listar platillos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{baseUrl}}/platillos?categoria=pastas&pagina=1&limite=10&ordenar_por=nombre&direccion=asc"
+          }
+        },
+        {
+          "name": "Crear platillo (201)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sopa de prueba\",\n  \"categoria\": \"sopas\",\n  \"precio_restaurante\": 7000,\n  \"tiempo_restaurante_min\": 15,\n  \"costo_estimado_casa\": 5000,\n  \"tiempo_casa_min\": 40\n}"
+            },
+            "url": "{{baseUrl}}/platillos"
+          }
+        },
+        {
+          "name": "Obtener platillo precargado",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{baseUrl}}/platillos/{{platilloId}}"
+          }
+        },
+        {
+          "name": "Listar productos del platillo",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{baseUrl}}/platillos/{{platilloId}}/productos?pagina=1&limite=10&ordenar_por=nombre&direccion=asc"
+          }
+        },
+        {
+          "name": "Agregar producto al platillo (201)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Queso rallado\",\n  \"cantidad\": 100,\n  \"unidad\": \"g\",\n  \"precio_unitario\": 4.5\n}"
+            },
+            "url": "{{baseUrl}}/platillos/{{platilloId}}/productos"
+          }
         }
-      }
+      ]
+    },
+    {
+      "name": "Pedidos",
+      "item": [
+        {
+          "name": "Listar pedidos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{baseUrl}}/pedidos?cuenta_id={{cuentaId}}&pagina=1&limite=10&ordenar_por=fecha&direccion=desc"
+          }
+        },
+        {
+          "name": "Crear pedido (201)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cuenta_id\": 1,\n  \"platillo_id\": 1,\n  \"modalidad\": \"restaurante\",\n  \"cantidad\": 1\n}"
+            },
+            "url": "{{baseUrl}}/pedidos"
+          }
+        },
+        {
+          "name": "Obtener pedido por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{baseUrl}}/pedidos/{{pedidoId}}"
+          }
+        },
+        {
+          "name": "Cambiar estado a confirmado",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"estado\": \"confirmado\"\n}" },
+            "url": "{{baseUrl}}/pedidos/{{pedidoId}}/estado"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Validaciones y errores",
+      "item": [
+        {
+          "name": "Error de validacion (422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"cuenta_id\": 0,\n  \"platillo_id\": 1,\n  \"modalidad\": \"presencial\",\n  \"cantidad\": 0\n}" },
+            "url": "{{baseUrl}}/pedidos"
+          }
+        },
+        {
+          "name": "Recurso inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{baseUrl}}/platillos/999999"
+          }
+        }
+      ]
     }
   ]
 }
