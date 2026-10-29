@@ -6,9 +6,13 @@ from App.core.errors import BusinessRuleError, NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.pedidos_domain import EstadoPedido, Modalidad, Pedido
 from App.domain.platillos_domain import Platillo
-from App.repositories.cuentas_repo import CuentaRepository, cuenta_repo
-from App.repositories.pedidos_repo import PedidoRepository, pedido_repo
-from App.repositories.platillos_repo import PlatilloRepository, platillo_repo
+from App.repositories.cuentas_repo import CuentaRepository
+from App.repositories.pedidos_repo import PedidoRepository
+from App.repositories.platillos_repo import PlatilloRepository
+from App.infrastructure.database import get_db_session
+from App.infrastructure.repositories import CuentaRepository as SQLCuentaRepository, PedidoRepository as SQLPedidoRepository, PlatilloRepository as SQLPlatilloRepository
+from fastapi import Depends
+from sqlalchemy.orm import Session
 from App.schemas.pedidos_shemas import PedidoCreate, PedidoResponse
 from App.services.dtos.pedidos_dto import CalculoPedidoDTO
 from App.services.dtos.pedidos_query_dto import PedidoQuery
@@ -21,9 +25,7 @@ class PedidoService:
         cuentas: Optional[CuentaRepository] = None,
         platillos: Optional[PlatilloRepository] = None,
     ):
-        self.repo = repo if repo is not None else pedido_repo
-        self.cuentas = cuentas if cuentas is not None else cuenta_repo
-        self.platillos = platillos if platillos is not None else platillo_repo
+        self.repo, self.cuentas, self.platillos = repo, cuentas, platillos
 
     # ---------- utilidades ----------
     def _obtener_o_404(self, pedido_id: int) -> Pedido:
@@ -43,14 +45,7 @@ class PedidoService:
 
     # ---------- casos de uso ----------
     def listar(self, q: PedidoQuery) -> dict:
-        pedidos = self.repo.get_all()
-        if q.estado is not None:
-            pedidos = [p for p in pedidos if p.estado == q.estado]
-        if q.cuenta_id is not None:
-            pedidos = [p for p in pedidos if p.cuenta_id == q.cuenta_id]
-        pedidos = ordenar(pedidos, q.ordenar_por, q.direccion)
-        total = len(pedidos)
-        pagina = paginar(pedidos, q.pagina, q.limite)
+        pagina, total = self.repo.list_page({"estado": q.estado, "cuenta_id": q.cuenta_id}, q.ordenar_por, q.direccion, q.pagina, q.limite)
         items = [PedidoResponse(**asdict(p)) for p in pagina]
         return construir_pagina(items, total, q.pagina, q.limite)
 
@@ -105,6 +100,7 @@ class PedidoService:
                 f"No se puede pasar un pedido de '{pedido.estado.value}' a '{nuevo.value}'"
             )
         pedido.estado = nuevo
+        pedido = self.repo.update(pedido_id, pedido)
         return PedidoResponse(**asdict(pedido))
 
     def cancelar(self, pedido_id: int) -> PedidoResponse:
@@ -112,5 +108,5 @@ class PedidoService:
         return self.cambiar_estado(pedido_id, EstadoPedido.CANCELADO)
 
 
-def get_pedido_service() -> PedidoService:
-    return PedidoService()
+def get_pedido_service(session: Session = Depends(get_db_session)) -> PedidoService:
+    return PedidoService(SQLPedidoRepository(session), SQLCuentaRepository(session), SQLPlatilloRepository(session))

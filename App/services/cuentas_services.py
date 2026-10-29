@@ -5,8 +5,12 @@ from typing import Optional
 from App.core.errors import BusinessRuleError, ConflictError, NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.cuentas_domain import Cuenta
-from App.repositories.cuentas_repo import CuentaRepository, cuenta_repo
-from App.repositories.pedidos_repo import PedidoRepository, pedido_repo
+from App.repositories.cuentas_repo import CuentaRepository
+from App.repositories.pedidos_repo import PedidoRepository
+from App.infrastructure.database import get_db_session
+from App.infrastructure.repositories import CuentaRepository as SQLCuentaRepository, PedidoRepository as SQLPedidoRepository
+from fastapi import Depends
+from sqlalchemy.orm import Session
 from App.schemas.cuentas_shemas import (
     CuentaCreate,
     CuentaResponse,
@@ -23,8 +27,8 @@ class CuentaService:
         repo: Optional[CuentaRepository] = None,
         pedidos: Optional[PedidoRepository] = None,
     ):
-        self.repo = repo if repo is not None else cuenta_repo
-        self.pedidos = pedidos if pedidos is not None else pedido_repo
+        self.repo = repo
+        self.pedidos = pedidos
 
     # ---------- utilidades ----------
     def _obtener_o_404(self, cuenta_id: int) -> Cuenta:
@@ -43,12 +47,7 @@ class CuentaService:
 
     # ---------- casos de uso ----------
     def listar(self, q: CuentaQuery) -> dict:
-        cuentas = self.repo.get_all()
-        if q.nombre:
-            cuentas = [c for c in cuentas if q.nombre.lower() in c.nombre_titular.lower()]
-        cuentas = ordenar(cuentas, q.ordenar_por, q.direccion)
-        total = len(cuentas)
-        pagina = paginar(cuentas, q.pagina, q.limite)
+        pagina, total = self.repo.list_page({"nombre_titular": q.nombre}, q.ordenar_por, q.direccion, q.pagina, q.limite, contains=("nombre_titular",))
         items = [CuentaResponse.model_validate(c) for c in pagina]
         return construir_pagina(items, total, q.pagina, q.limite)
 
@@ -113,5 +112,5 @@ class CuentaService:
         return ResumenCuentaResponse(**asdict(dto))
 
 
-def get_cuenta_service() -> CuentaService:
-    return CuentaService()
+def get_cuenta_service(session: Session = Depends(get_db_session)) -> CuentaService:
+    return CuentaService(SQLCuentaRepository(session), SQLPedidoRepository(session))

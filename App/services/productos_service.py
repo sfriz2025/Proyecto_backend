@@ -4,8 +4,12 @@ from typing import Optional
 from App.core.errors import NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.productos_domain import Producto
-from App.repositories.platillos_repo import PlatilloRepository, platillo_repo
-from App.repositories.Productos_repo import ProductoRepository, producto_repo
+from App.repositories.platillos_repo import PlatilloRepository
+from App.repositories.Productos_repo import ProductoRepository
+from App.infrastructure.database import get_db_session
+from App.infrastructure.repositories import PlatilloRepository as SQLPlatilloRepository, ProductoRepository as SQLProductoRepository
+from fastapi import Depends
+from sqlalchemy.orm import Session
 from App.schemas.producto_shemas import ProductoCreate, ProductoResponse
 from App.services.dtos.productos_query_dto import ProductoQuery
 
@@ -16,8 +20,7 @@ class ProductoService:
         repo: Optional[ProductoRepository] = None,
         platillos: Optional[PlatilloRepository] = None,
     ):
-        self.repo = repo if repo is not None else producto_repo
-        self.platillos = platillos if platillos is not None else platillo_repo
+        self.repo, self.platillos = repo, platillos
 
     def _a_response(self, p: Producto) -> ProductoResponse:
         return ProductoResponse(**asdict(p), costo_total=p.costo_total())
@@ -28,12 +31,7 @@ class ProductoService:
 
     def listar_por_platillo(self, platillo_id: int, q: ProductoQuery) -> dict:
         self._validar_platillo(platillo_id)
-        productos = self.repo.obtener_por_platillo(platillo_id)
-        if q.unidad is not None:
-            productos = [p for p in productos if p.unidad == q.unidad]
-        productos = ordenar(productos, q.ordenar_por, q.direccion)
-        total = len(productos)
-        pagina = paginar(productos, q.pagina, q.limite)
+        pagina, total = self.repo.list_page({"platillo_id": platillo_id, "unidad": q.unidad}, q.ordenar_por, q.direccion, q.pagina, q.limite)
         return construir_pagina([self._a_response(p) for p in pagina], total, q.pagina, q.limite)
 
     def crear(self, platillo_id: int, datos: ProductoCreate) -> ProductoResponse:
@@ -46,5 +44,5 @@ class ProductoService:
             raise NotFoundError("No existe un producto con el ID solicitado")
 
 
-def get_producto_service() -> ProductoService:
-    return ProductoService()
+def get_producto_service(session: Session = Depends(get_db_session)) -> ProductoService:
+    return ProductoService(SQLProductoRepository(session), SQLPlatilloRepository(session))

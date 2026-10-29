@@ -4,9 +4,13 @@ from typing import Optional
 from App.core.errors import ConflictError, NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.platillos_domain import Platillo
-from App.repositories.pedidos_repo import PedidoRepository, pedido_repo
-from App.repositories.platillos_repo import PlatilloRepository, platillo_repo
-from App.repositories.Productos_repo import ProductoRepository, producto_repo
+from App.repositories.pedidos_repo import PedidoRepository
+from App.repositories.platillos_repo import PlatilloRepository
+from App.repositories.Productos_repo import ProductoRepository
+from App.infrastructure.database import get_db_session
+from App.infrastructure.repositories import PedidoRepository as SQLPedidoRepository, PlatilloRepository as SQLPlatilloRepository, ProductoRepository as SQLProductoRepository
+from fastapi import Depends
+from sqlalchemy.orm import Session
 from App.schemas.platillos_shemas import PlatilloCreate, PlatilloResponse, PlatilloUpdate
 from App.services.dtos.platillos_dto import ComparacionPlatilloDTO
 from App.services.dtos.platillos_query_dto import PlatilloQuery
@@ -19,9 +23,7 @@ class PlatilloService:
         pedidos: Optional[PedidoRepository] = None,
         productos: Optional[ProductoRepository] = None,
     ):
-        self.repo = repo if repo is not None else platillo_repo
-        self.pedidos = pedidos if pedidos is not None else pedido_repo
-        self.productos = productos if productos is not None else producto_repo
+        self.repo, self.pedidos, self.productos = repo, pedidos, productos
 
     # ---------- utilidades ----------
     def _obtener_o_404(self, platillo_id: int) -> Platillo:
@@ -45,12 +47,7 @@ class PlatilloService:
     # ---------- casos de uso ----------
     def listar(self, q: PlatilloQuery) -> dict:
         """Filtrar -> ordenar -> paginar (en ese orden)."""
-        platillos = self.repo.get_all()
-        if q.categoria:
-            platillos = [p for p in platillos if p.categoria.lower() == q.categoria.lower()]
-        platillos = ordenar(platillos, q.ordenar_por, q.direccion)
-        total = len(platillos)
-        pagina = paginar(platillos, q.pagina, q.limite)
+        pagina, total = self.repo.list_page({"categoria": q.categoria}, q.ordenar_por, q.direccion, q.pagina, q.limite)
         return construir_pagina([self._a_response(p) for p in pagina], total, q.pagina, q.limite)
 
     def crear(self, datos: PlatilloCreate) -> PlatilloResponse:
@@ -78,5 +75,5 @@ class PlatilloService:
         self.repo.delete(platillo_id)
 
 
-def get_platillo_service() -> PlatilloService:
-    return PlatilloService()
+def get_platillo_service(session: Session = Depends(get_db_session)) -> PlatilloService:
+    return PlatilloService(SQLPlatilloRepository(session), SQLPedidoRepository(session), SQLProductoRepository(session))
