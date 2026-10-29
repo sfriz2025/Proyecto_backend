@@ -8,6 +8,9 @@ env/
 
 # Configuración local y variables de entorno
 .env
+foodcart.db
+foodcart.db-shm
+foodcart.db-wal
 .vscode/
 .idea/
 
