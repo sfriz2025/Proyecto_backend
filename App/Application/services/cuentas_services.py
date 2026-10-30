@@ -5,16 +5,16 @@ from typing import Optional
 from App.core.errors import BusinessRuleError, ConflictError, NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.cuentas_domain import Cuenta
-from App.repositories.cuentas_repo import CuentaRepository, cuenta_repo
-from App.repositories.pedidos_repo import PedidoRepository, pedido_repo
-from App.schemas.cuentas_shemas import (
+from App.Infraestructure.repositories.cuentas_repo import CuentaRepository, cuenta_repo
+from App.Infraestructure.repositories.pedidos_repo import PedidoRepository, pedido_repo
+from App.presentation.schemas.cuentas_shemas import (
     CuentaCreate,
     CuentaResponse,
     CuentaUpdate,
     ResumenCuentaResponse,
 )
-from App.services.dtos.cuentas_dto import ResumenGastoDTO
-from App.services.dtos.cuentas_query_dto import CuentaQuery
+from App.Application.dtos.cuentas_dto import ResumenGastoDTO
+from App.Application.dtos.cuentas_query_dto import CuentaQuery
 
 
 class CuentaService:

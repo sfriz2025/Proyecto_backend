@@ -4,14 +4,14 @@ from fastapi import APIRouter, Depends, Path, Query, Response, status
 
 from App.core.errors import ErrorResponse
 from App.core.pagination import Pagina
-from App.schemas.cuentas_shemas import (
+from App.presentation.schemas.cuentas_shemas import (
     CuentaCreate,
     CuentaResponse,
     CuentaUpdate,
     ResumenCuentaResponse,
 )
-from App.services.cuentas_services import CuentaService, get_cuenta_service
-from App.services.dtos.cuentas_query_dto import CuentaQuery
+from App.Application.services.cuentas_services import CuentaService, get_cuenta_service
+from App.Application.dtos.cuentas_query_dto import CuentaQuery
 
 router = APIRouter(prefix="/cuentas", tags=["Cuentas"])
 

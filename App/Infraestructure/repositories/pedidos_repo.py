@@ -1,5 +1,5 @@
 from App.domain.pedidos_domain import EstadoPedido, Pedido
-from App.repositories.base_repo import InMemoryRepository
+from App.Infraestructure.repositories.base_repo import InMemoryRepository
 
 
 class PedidoRepository(InMemoryRepository[Pedido]):

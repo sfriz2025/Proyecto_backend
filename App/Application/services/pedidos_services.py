@@ -6,12 +6,12 @@ from App.core.errors import BusinessRuleError, NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.pedidos_domain import EstadoPedido, Modalidad, Pedido
 from App.domain.platillos_domain import Platillo
-from App.repositories.cuentas_repo import CuentaRepository, cuenta_repo
-from App.repositories.pedidos_repo import PedidoRepository, pedido_repo
-from App.repositories.platillos_repo import PlatilloRepository, platillo_repo
-from App.schemas.pedidos_shemas import PedidoCreate, PedidoResponse
-from App.services.dtos.pedidos_dto import CalculoPedidoDTO
-from App.services.dtos.pedidos_query_dto import PedidoQuery
+from App.Infraestructure.repositories.cuentas_repo import CuentaRepository, cuenta_repo
+from App.Infraestructure.repositories.pedidos_repo import PedidoRepository, pedido_repo
+from App.Infraestructure.repositories.platillos_repo import PlatilloRepository, platillo_repo
+from App.presentation.schemas.pedidos_shemas import PedidoCreate, PedidoResponse
+from App.Application.dtos.pedidos_dto import CalculoPedidoDTO
+from App.Application.dtos.pedidos_query_dto import PedidoQuery
 
 
 class PedidoService:

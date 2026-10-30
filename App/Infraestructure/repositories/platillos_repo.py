@@ -1,7 +1,7 @@
 from typing import Optional
 
 from App.domain.platillos_domain import Platillo
-from App.repositories.base_repo import InMemoryRepository
+from App.Infraestructure.repositories.base_repo import InMemoryRepository
 
 
 class PlatilloRepository(InMemoryRepository[Platillo]):

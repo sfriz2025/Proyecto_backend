@@ -4,10 +4,10 @@ from typing import Optional
 from App.core.errors import NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.productos_domain import Producto
-from App.repositories.platillos_repo import PlatilloRepository, platillo_repo
-from App.repositories.Productos_repo import ProductoRepository, producto_repo
-from App.schemas.producto_shemas import ProductoCreate, ProductoResponse
-from App.services.dtos.productos_query_dto import ProductoQuery
+from App.Infraestructure.repositories.platillos_repo import PlatilloRepository, platillo_repo
+from App.Infraestructure.repositories.Productos_repo import ProductoRepository, producto_repo
+from App.presentation.schemas.producto_shemas import ProductoCreate, ProductoResponse
+from App.Application.dtos.productos_query_dto import ProductoQuery
 
 
 class ProductoService:

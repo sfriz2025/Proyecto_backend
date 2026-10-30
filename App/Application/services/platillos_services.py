@@ -4,12 +4,12 @@ from typing import Optional
 from App.core.errors import ConflictError, NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.platillos_domain import Platillo
-from App.repositories.pedidos_repo import PedidoRepository, pedido_repo
-from App.repositories.platillos_repo import PlatilloRepository, platillo_repo
-from App.repositories.Productos_repo import ProductoRepository, producto_repo
-from App.schemas.platillos_shemas import PlatilloCreate, PlatilloResponse, PlatilloUpdate
-from App.services.dtos.platillos_dto import ComparacionPlatilloDTO
-from App.services.dtos.platillos_query_dto import PlatilloQuery
+from App.Infraestructure.repositories.pedidos_repo import PedidoRepository, pedido_repo
+from App.Infraestructure.repositories.platillos_repo import PlatilloRepository, platillo_repo
+from App.Infraestructure.repositories.Productos_repo import ProductoRepository, producto_repo
+from App.presentation.schemas.platillos_shemas import PlatilloCreate, PlatilloResponse, PlatilloUpdate
+from App.Application.dtos.platillos_dto import ComparacionPlatilloDTO
+from App.Application.dtos.platillos_query_dto import PlatilloQuery
 
 
 class PlatilloService:

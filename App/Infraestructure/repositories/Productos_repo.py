@@ -1,7 +1,7 @@
 from typing import List
 
 from App.domain.productos_domain import Producto, Unidad
-from App.repositories.base_repo import InMemoryRepository
+from App.Infraestructure.repositories.base_repo import InMemoryRepository
 
 
 class ProductoRepository(InMemoryRepository[Producto]):

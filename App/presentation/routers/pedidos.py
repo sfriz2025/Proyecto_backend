@@ -5,9 +5,9 @@ from fastapi import APIRouter, Depends, Path, Query, status
 from App.core.errors import ErrorResponse
 from App.core.pagination import Pagina
 from App.domain.pedidos_domain import EstadoPedido
-from App.schemas.pedidos_shemas import PedidoCreate, PedidoEstadoUpdate, PedidoResponse
-from App.services.dtos.pedidos_query_dto import PedidoQuery
-from App.services.pedidos_services import PedidoService, get_pedido_service
+from App.presentation.schemas.pedidos_shemas import PedidoCreate, PedidoEstadoUpdate, PedidoResponse
+from App.Application.dtos.pedidos_query_dto import PedidoQuery
+from App.Application.services.pedidos_services import PedidoService, get_pedido_service
 
 router = APIRouter(prefix="/pedidos", tags=["Pedidos"])
 
