@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, Path, Query, Response, status
 
 from App.core.errors import ErrorResponse
 from App.core.pagination import Pagina
-from App.schemas.platillos_shemas import PlatilloCreate, PlatilloResponse, PlatilloUpdate
-from App.services.dtos.platillos_query_dto import PlatilloQuery
-from App.services.platillos_services import PlatilloService, get_platillo_service
+from App.presentation.schemas.platillos_shemas import PlatilloCreate, PlatilloResponse, PlatilloUpdate
+from App.Application.dtos.platillos_query_dto import PlatilloQuery
+from App.Application.services.platillos_services import PlatilloService, get_platillo_service
 
 router = APIRouter(prefix="/platillos", tags=["Platillos"])
 

@@ -5,9 +5,9 @@ from fastapi import APIRouter, Depends, Path, Query, Response, status
 from App.core.errors import ErrorResponse
 from App.core.pagination import Pagina
 from App.domain.productos_domain import Unidad
-from App.schemas.producto_shemas import ProductoCreate, ProductoResponse
-from App.services.dtos.productos_query_dto import ProductoQuery
-from App.services.productos_service import ProductoService, get_producto_service
+from App.presentation.schemas.producto_shemas import ProductoCreate, ProductoResponse
+from App.Application.dtos.productos_query_dto import ProductoQuery
+from App.Application.services.productos_service import ProductoService, get_producto_service
 
 router = APIRouter(tags=["Productos"])
 
