@@ -1,0 +1,31 @@
+### 1. Caso Exitoso - Crear recurso (201 Created)
+POST http://localhost:8000/api/v1/pedidos
+Content-Type: application/json
+
+{
+  "nombre": "Pedido de prueba E2",
+  "descripcion": "Prueba de integración de API",
+  "precio": 1500,
+  "categoria": "General"
+}
+
+### 2. Caso Exitoso - Obtener por ID (200 OK)
+GET http://localhost:8000/api/v1/pedidos/1
+Accept: application/json
+
+### 3. Caso de Filtros, Ordenamiento y Paginación (200 OK)
+GET http://localhost:8000/api/v1/pedidos?page=1&limit=10&sort=desc
+Accept: application/json
+
+### 4. Caso de Error de Cliente - Datos inválidos (400 Bad Request)
+POST http://localhost:8000/api/v1/pedidos
+Content-Type: application/json
+
+{
+  "nombre": "",
+  "precio": -500
+}
+
+### 5. Caso de Error de Cliente - No encontrado (404 Not Found)
+GET http://localhost:8000/api/v1/pedidos/9999
+Accept: application/json
