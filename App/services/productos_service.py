@@ -1,13 +1,20 @@
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from App.infrastructure.database import get_db
+from App.infrastructure.repositories.platillos_repository import PlatilloSQLRepository
+from App.infrastructure.repositories.productos_repository import ProductoSQLRepository
 from dataclasses import asdict
 from typing import Optional
-
 from App.core.errors import NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.productos_domain import Producto
-from App.repositories.platillos_repo import PlatilloRepository, platillo_repo
-from App.repositories.Productos_repo import ProductoRepository, producto_repo
+from App.repositories.platillos_repository import PlatilloRepository, platillo_repo
+from App.repositories.productos_repository import ProductoRepository, producto_repo
 from App.schemas.producto_shemas import ProductoCreate, ProductoResponse
 from App.services.dtos.productos_query_dto import ProductoQuery
+#Los imports traen las clases y funciones necesarias para interactuar con la base de datos,
+#manejar errores, paginación y definir los esquemas de datos para los productos.
+#-----------------------------
 
 
 class ProductoService:
@@ -46,5 +53,13 @@ class ProductoService:
             raise NotFoundError("No existe un producto con el ID solicitado")
 
 
-def get_producto_service() -> ProductoService:
-    return ProductoService()
+def get_producto_service(db: Session = Depends(get_db)) -> ProductoService:
+    return ProductoService(
+        repo=ProductoSQLRepository(db),
+        platillos=PlatilloSQLRepository(db),
+    )
+
+#-----------------------------
+# ANOTACIONES:
+# 1. La clase ProductoService es un servicio que maneja la lógica de negocio relacionada
+#    con los productos. Proporciona métodos para listar, crear y eliminar productos.

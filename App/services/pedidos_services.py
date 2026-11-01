@@ -4,16 +4,17 @@ from typing import Optional
 
 from fastapi import Depends
 from sqlalchemy.orm import Session
-
+from App.infrastructure.repositories.pedidos_repository import PedidoSQLRepository
+from App.infrastructure.repositories.platillos_repository import PlatilloSQLRepository
 from App.core.errors import BusinessRuleError, NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.pedidos_domain import EstadoPedido, Modalidad, Pedido
 from App.domain.platillos_domain import Platillo
 from App.infrastructure.database import get_db
 from App.infrastructure.repositories.cuentas_repository import CuentaSQLRepository
-from App.repositories.cuentas_repo import CuentaRepository, cuenta_repo
-from App.repositories.pedidos_repo import PedidoRepository, pedido_repo
-from App.repositories.platillos_repo import PlatilloRepository, platillo_repo
+from App.repositories.cuentas_repository import CuentaRepository, cuenta_repo
+from App.repositories.pedidos_repository import PedidoRepository, pedido_repo
+from App.repositories.platillos_repository import PlatilloRepository, platillo_repo
 from App.schemas.pedidos_shemas import PedidoCreate, PedidoResponse
 from App.services.dtos.pedidos_dto import CalculoPedidoDTO
 from App.services.dtos.pedidos_query_dto import PedidoQuery
@@ -110,7 +111,11 @@ class PedidoService:
                 f"No se puede pasar un pedido de '{pedido.estado.value}' a '{nuevo.value}'"
             )
         pedido.estado = nuevo
-        return PedidoResponse(**asdict(pedido))
+        pedido_actualizado = self.repo.update(pedido_id, pedido)
+        if pedido_actualizado is None:
+            raise NotFoundError("No existe un pedido con el ID solicitado")
+
+        return PedidoResponse(**asdict(pedido_actualizado))
 
     def cancelar(self, pedido_id: int) -> PedidoResponse:
         """DELETE /pedidos/{id}: cancela el pedido (queda registrado como 'cancelado')."""
@@ -118,4 +123,8 @@ class PedidoService:
 
 
 def get_pedido_service(db: Session = Depends(get_db)) -> PedidoService:
-    return PedidoService(cuentas=CuentaSQLRepository(db))
+    return PedidoService(
+        repo=PedidoSQLRepository(db),
+        cuentas=CuentaSQLRepository(db),
+        platillos=PlatilloSQLRepository(db),
+    )

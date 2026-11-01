@@ -10,8 +10,8 @@ from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.cuentas_domain import Cuenta
 from App.infrastructure.database import get_db
 from App.infrastructure.repositories.cuentas_repository import CuentaSQLRepository
-from App.repositories.cuentas_repo import CuentaRepository, cuenta_repo
-from App.repositories.pedidos_repo import PedidoRepository, pedido_repo
+from App.repositories.cuentas_repository import CuentaRepository, cuenta_repo
+from App.repositories.pedidos_repository import PedidoRepository, pedido_repo
 from App.schemas.cuentas_shemas import (
     CuentaCreate,
     CuentaResponse,
@@ -20,6 +20,7 @@ from App.schemas.cuentas_shemas import (
 )
 from App.services.dtos.cuentas_dto import ResumenGastoDTO
 from App.services.dtos.cuentas_query_dto import CuentaQuery
+from App.infrastructure.repositories.pedidos_repository import PedidoSQLRepository
 
 
 class CuentaService:
@@ -125,4 +126,7 @@ class CuentaService:
 
 
 def get_cuenta_service(db: Session = Depends(get_db)) -> CuentaService:
-    return CuentaService(repo=CuentaSQLRepository(db))
+    return CuentaService(
+        repo=CuentaSQLRepository(db),
+        pedidos=PedidoSQLRepository(db),
+    )

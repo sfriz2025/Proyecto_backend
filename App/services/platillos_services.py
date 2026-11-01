@@ -1,12 +1,19 @@
 from dataclasses import asdict
 from typing import Optional
+from fastapi import Depends
+from sqlalchemy.orm import Session
+
+from App.infrastructure.database import get_db
+from App.infrastructure.repositories.pedidos_repository import PedidoSQLRepository
+from App.infrastructure.repositories.platillos_repository import PlatilloSQLRepository
+from App.infrastructure.repositories.productos_repository import ProductoSQLRepository
 
 from App.core.errors import ConflictError, NotFoundError
 from App.core.pagination import construir_pagina, ordenar, paginar
 from App.domain.platillos_domain import Platillo
-from App.repositories.pedidos_repo import PedidoRepository, pedido_repo
-from App.repositories.platillos_repo import PlatilloRepository, platillo_repo
-from App.repositories.Productos_repo import ProductoRepository, producto_repo
+from App.repositories.pedidos_repository import PedidoRepository, pedido_repo
+from App.repositories.platillos_repository import PlatilloRepository, platillo_repo
+from App.repositories.productos_repository import ProductoRepository, producto_repo
 from App.schemas.platillos_shemas import PlatilloCreate, PlatilloResponse, PlatilloUpdate
 from App.services.dtos.platillos_dto import ComparacionPlatilloDTO
 from App.services.dtos.platillos_query_dto import PlatilloQuery
@@ -78,5 +85,9 @@ class PlatilloService:
         self.repo.delete(platillo_id)
 
 
-def get_platillo_service() -> PlatilloService:
-    return PlatilloService()
+def get_platillo_service(db: Session = Depends(get_db)) -> PlatilloService:
+    return PlatilloService(
+        repo=PlatilloSQLRepository(db),
+        pedidos=PedidoSQLRepository(db),
+        productos=ProductoSQLRepository(db),
+    )
