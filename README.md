@@ -2,10 +2,19 @@
 
 API para registrar cuentas, comparar el costo de restaurante y casa, gestionar productos de platillos y seguir pedidos. La persistencia usa SQLAlchemy y SQLite por defecto; se puede cambiar a PostgreSQL mediante `DATABASE_URL`.
 
+## Equipo y distribución de trabajo
+
+| Integrante | Área | Responsabilidad |
+|---|---|---|
+| Scarleth Friz (Líder) | Coordinación y seguimiento, dominio y datos | Servidor y Base de Datos con Docker, requirements, .env .example, toda la carpeta infrastructure/ (modelos ORM, mappers, repositoriosSQL), Alembic y seeders. También gestiona ramas y Pull Requests, junto con revisar la lista de verificación antes de entregar. |
+| Catalina Ojeda | API y lógica de negocio, calidad y pruebas, documentación e integración. | Reorganizar las carpetas por capas, adaptar servicios y routers a la sesión de Base de Datos, documentar los 6 casos de prueba, README, diagramas y diapositivas. |
+
 ## Requisitos e instalación
 
 - Python 3.10 o superior
 - `pip`
+- Docker 29.9.2
+- posgrest:16-alpine
 
 ```powershell
 python -m venv .venv
@@ -127,15 +136,6 @@ Las respuestas de error mantienen `{ "error": { "code", "message", "details" } }
 | 409 | Conflicto con el estado o dato duplicado |
 | 422 | Validación del esquema |
 
-## Integrantes y responsabilidades
-
-| Integrante | Responsabilidad |
-|---|---|
-| Catalina Ojeda | Coordinación, documentación e integración |
-| Scarleth Friz | API y lógica de negocio |
-| Por completar | Dominio y datos |
-| Por completar | Calidad y pruebas |
-
 ## Entregables de equipo pendientes
 
-El historial de commits, las ramas y los pull requests deben corresponder a la actividad real de cada integrante. Completen esa coordinación en GitHub. Confirmen con el docente si el repositorio se debe renombrar a `backend-2026-grupo-XX`. La presentación final debe tener máximo 15 diapositivas y responder P1 a P7 siguiendo el orden de la pauta.
+PENDIENTE
