@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 
-from App.core.errors import registrar_manejadores
-from App.presentation.routers import Platillos, Producto, cuentas
-from App.presentation.routers import pedidos
+from core.errors import registrar_manejadores
+from presentation.routers import Platillos, Producto, cuentas, pedidos
 
 app = FastAPI(
     title="FoodCart API",

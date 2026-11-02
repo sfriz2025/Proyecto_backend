@@ -30,7 +30,7 @@ La configuración inicial usa `sqlite:///./foodcart.db`. Para PostgreSQL, edita 
 ```powershell
 alembic upgrade head
 python -m seeders.seed
-uvicorn App.main:app --reload
+uvicorn app.main:app --reload
 ```
 
 El seeder inserta dos registros de cada entidad y no vuelve a insertar si ya hay cuentas. Para revisar el esquema: `alembic current`; para retroceder: `alembic downgrade base`. La base SQLite se guarda en `foodcart.db` y está excluida de Git.
