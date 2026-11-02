@@ -4,8 +4,8 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from App.infrastructure.database import Base, DATABASE_URL
-import App.infrastructure.models  # noqa: F401
+from infrastructure.database import Base, DATABASE_URL
+import infrastructure.models  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
