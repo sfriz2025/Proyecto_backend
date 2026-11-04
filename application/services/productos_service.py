@@ -8,8 +8,6 @@ from typing import Optional
 from core.errors import NotFoundError
 from core.pagination import construir_pagina, ordenar, paginar
 from domain.productos_domain import Producto
-from repositories.platillos_repository import PlatilloRepository, platillo_repo
-from repositories.productos_repository import ProductoRepository, producto_repo
 from presentation.schemas.producto_shemas import ProductoCreate, ProductoResponse
 from application.services.dtos.productos_query_dto import ProductoQuery
 #Los imports traen las clases y funciones necesarias para interactuar con la base de datos,
@@ -20,11 +18,11 @@ from application.services.dtos.productos_query_dto import ProductoQuery
 class ProductoService:
     def __init__(
         self,
-        repo: Optional[ProductoRepository] = None,
-        platillos: Optional[PlatilloRepository] = None,
+        repo,
+        platillos,
     ):
-        self.repo = repo if repo is not None else producto_repo
-        self.platillos = platillos if platillos is not None else platillo_repo
+        self.repo = repo
+        self.platillos = platillos
 
     def _a_response(self, p: Producto) -> ProductoResponse:
         return ProductoResponse(**asdict(p), costo_total=p.costo_total())

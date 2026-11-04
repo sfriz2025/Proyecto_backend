@@ -11,9 +11,6 @@ from infrastructure.repositories.productos_repository import ProductoSQLReposito
 from core.errors import ConflictError, NotFoundError
 from core.pagination import construir_pagina, ordenar, paginar
 from domain.platillos_domain import Platillo
-from repositories.pedidos_repository import PedidoRepository, pedido_repo
-from repositories.platillos_repository import PlatilloRepository, platillo_repo
-from repositories.productos_repository import ProductoRepository, producto_repo
 from presentation.schemas.platillos_shemas import PlatilloCreate, PlatilloResponse, PlatilloUpdate
 from application.services.dtos.platillos_dto import ComparacionPlatilloDTO
 from application.services.dtos.platillos_query_dto import PlatilloQuery
@@ -22,13 +19,13 @@ from application.services.dtos.platillos_query_dto import PlatilloQuery
 class PlatilloService:
     def __init__(
         self,
-        repo: Optional[PlatilloRepository] = None,
-        pedidos: Optional[PedidoRepository] = None,
-        productos: Optional[ProductoRepository] = None,
+        repo,
+        pedidos,
+        productos,
     ):
-        self.repo = repo if repo is not None else platillo_repo
-        self.pedidos = pedidos if pedidos is not None else pedido_repo
-        self.productos = productos if productos is not None else producto_repo
+        self.repo = repo
+        self.pedidos = pedidos
+        self.productos = productos
 
     # ---------- utilidades ----------
     def _obtener_o_404(self, platillo_id: int) -> Platillo:

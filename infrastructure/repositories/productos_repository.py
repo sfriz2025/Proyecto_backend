@@ -54,6 +54,23 @@ class ProductoSQLRepository:
 
         return producto_a_dominio(modelo)
 
+    def update(self, producto_id: int, producto: Producto) -> Producto | None:
+        modelo = self.db.get(ProductoModel, producto_id)
+        if modelo is None:
+            return None
+
+        modelo.nombre = producto.nombre
+        modelo.cantidad = producto.cantidad
+        modelo.unidad = producto.unidad.value
+        modelo.precio_unitario = producto.precio_unitario
+        try:
+            self.db.commit()
+            self.db.refresh(modelo)
+        except Exception:
+            self.db.rollback()
+            raise
+        return producto_a_dominio(modelo)
+
     def eliminar_por_platillo(self, platillo_id: int) -> None:
         productos = self.db.scalars(
             select(ProductoModel).where(

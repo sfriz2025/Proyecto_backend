@@ -10,8 +10,6 @@ from core.pagination import construir_pagina, ordenar, paginar
 from domain.cuentas_domain import Cuenta
 from infrastructure.database import get_db
 from infrastructure.repositories.cuentas_repository import CuentaSQLRepository
-from repositories.cuentas_repository import CuentaRepository, cuenta_repo
-from repositories.pedidos_repository import PedidoRepository, pedido_repo
 from presentation.schemas.cuentas_shemas import (
     CuentaCreate,
     CuentaResponse,
@@ -26,11 +24,11 @@ from infrastructure.repositories.pedidos_repository import PedidoSQLRepository
 class CuentaService:
     def __init__(
         self,
-        repo: Optional[CuentaRepository] = None,
-        pedidos: Optional[PedidoRepository] = None,
+        repo,
+        pedidos,
     ):
-        self.repo = repo if repo is not None else cuenta_repo
-        self.pedidos = pedidos if pedidos is not None else pedido_repo
+        self.repo = repo
+        self.pedidos = pedidos
 
     # ---------- utilidades ----------
     def _obtener_o_404(self, cuenta_id: int) -> Cuenta:
