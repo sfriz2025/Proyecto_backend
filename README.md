@@ -15,6 +15,7 @@ API para registrar cuentas, comparar el costo de restaurante y casa, gestionar p
 - `pip`
 - Docker 29.9.2
 - posgrest:16-alpine
+- Uvicorn 0.53.0
 
 ```powershell
 python -m venv .venv
@@ -25,12 +26,28 @@ Copy-Item .env.example .env
 
 La configuración inicial usa `sqlite:///./foodcart.db`. Para PostgreSQL, edita `.env` con una URL como `postgresql+psycopg://usuario:clave@localhost:5432/foodcart` y asegúrate de que la base exista.
 
+### Instrucciones de ejecución:
+
+Primero se deben configurar variables de entorno: Copiar .env .example a .env y configurar credenciales
+Y para ejecutarlo hay 2 opciones:
+1- Mediante Docker (la opción recomendada):
+    + Ejecutar docker compose up --build -d para levantar PostreSQL en el puerto 5433, la API en el 8000 y Adminer en el 8080
+    + Comando para levantar la API y la Base de Datos: docker compose up -d
+    + Comando para apagar la API y la Base de Datos: docker compose down
+
+2- Ejecución Local:
+    + 2.1: Crear y activar el entorno virtual
+    + 2.2: Ejecutar las migraciones para crear las tablas con el comando: alembic upgrade head
+    + 2.3: Probar la base de datos con registros iniciales con el comando: python -m seeders.seed
+    + 2.4: Iniciar el servidor con el comando: uvicorn app.main:app --reload
+
+
 ## Base de datos, migraciones y datos de ejemplo
 
 ```powershell
 alembic upgrade head
 python -m seeders.seed
-uvicorn App.main:app --reload
+uvicorn app.main:app --reload
 ```
 
 El seeder inserta dos registros de cada entidad y no vuelve a insertar si ya hay cuentas. Para revisar el esquema: `alembic current`; para retroceder: `alembic downgrade base`. La base SQLite se guarda en `foodcart.db` y está excluida de Git.
@@ -39,10 +56,10 @@ El seeder inserta dos registros de cada entidad y no vuelve a insertar si ya hay
 
 | Capa | Ubicación | Responsabilidad |
 |---|---|---|
-| Presentación | `App/routers`, `App/schemas` | HTTP, validación de entrada y contratos OpenAPI |
-| Aplicación | `App/services`, `App/services/dtos` | Casos de uso, reglas y coordinación |
-| Dominio | `App/domain` | Entidades, enums y reglas centrales |
-| Infraestructura | `App/infrastructure`, `App/repositories` | Sesiones SQLAlchemy, ORM, mapeo y acceso a datos |
+| Presentación | `/routers`, `/schemas` | HTTP, validación de entrada y contratos OpenAPI |
+| Aplicación | `/services`, `/services/dtos` | Casos de uso y sus reglas de negocio y coordinación |
+| Dominio | `domain` | Entidades, enums y reglas de negocio propias de cada entidad |
+| Infraestructura | `infrastructure`, `infrastructure/repositories` | Sesiones SQLAlchemy, ORM, mapeo y acceso a datos |
 
 ## Recorrido de una solicitud
 
@@ -129,13 +146,9 @@ Las respuestas de error mantienen `{ "error": { "code", "message", "details" } }
 | Código | Uso |
 |---|---|
 | 200 | Consulta o actualización correcta |
-| 201 | Recurso creado |
-| 204 | Eliminación sin contenido |
+| 201 | Recurso creado correctamente |
+| 204 | Eliminación exitosa |
 | 400 | Regla de negocio incumplida |
 | 404 | Recurso inexistente |
 | 409 | Conflicto con el estado o dato duplicado |
-| 422 | Validación del esquema |
-
-## Entregables de equipo pendientes
-
-PENDIENTE
+| 422 | Entidad improcesable |
