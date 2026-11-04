@@ -26,20 +26,22 @@ Copy-Item .env.example .env
 
 La configuración inicial usa `sqlite:///./foodcart.db`. Para PostgreSQL, edita `.env` con una URL como `postgresql+psycopg://usuario:clave@localhost:5432/foodcart` y asegúrate de que la base exista.
 
-### Instrucciones de ejecución:
+## Instrucciones de ejecución:
 
-Primero se deben configurar variables de entorno: Copiar .env .example a .env y configurar credenciales
-Y para ejecutarlo hay 2 opciones:
-1- Mediante Docker (la opción recomendada):
-    + Ejecutar docker compose up --build -d para levantar PostreSQL en el puerto 5433, la API en el 8000 y Adminer en el 8080
-    + Comando para levantar la API y la Base de Datos: docker compose up -d
-    + Comando para apagar la API y la Base de Datos: docker compose down
+Primero se deben configurar variables de entorno por lo que hay que copiar los .env .example a .env y configurar credenciales
 
-2- Ejecución Local:
-    + 2.1: Crear y activar el entorno virtual
-    + 2.2: Ejecutar las migraciones para crear las tablas con el comando: alembic upgrade head
-    + 2.3: Probar la base de datos con registros iniciales con el comando: python -m seeders.seed
-    + 2.4: Iniciar el servidor con el comando: uvicorn app.main:app --reload
+Y para **ejecutarlo hay 2 opciones:**
+
+    1- Mediante Docker (la opción recomendada):
+        - Ejecutar docker compose up --build -d para levantar PostreSQL en el puerto 5433, la API en el 8000 y Adminer en el 8080
+        - Comando para levantar la API y la Base de Datos: docker compose up -d
+        - Comando para apagar la API y la Base de Datos: docker compose down
+
+    2- Ejecución Local:
+        - 2.1: Crear y activar el entorno virtual
+        - 2.2: Ejecutar las migraciones para crear las tablas con el comando: alembic upgrade head
+        - 2.3: Probar la base de datos con registros iniciales con el comando: python -m seeders.seed
+        - 2.4: Iniciar el servidor con el comando: uvicorn app.main:app --reload
 
 
 ## Base de datos, migraciones y datos de ejemplo
