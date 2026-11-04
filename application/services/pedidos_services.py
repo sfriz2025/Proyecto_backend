@@ -12,9 +12,6 @@ from domain.pedidos_domain import EstadoPedido, Modalidad, Pedido
 from domain.platillos_domain import Platillo
 from infrastructure.database import get_db
 from infrastructure.repositories.cuentas_repository import CuentaSQLRepository
-from repositories.cuentas_repository import CuentaRepository, cuenta_repo
-from repositories.pedidos_repository import PedidoRepository, pedido_repo
-from repositories.platillos_repository import PlatilloRepository, platillo_repo
 from presentation.schemas.pedidos_shemas import PedidoCreate, PedidoResponse
 from application.services.dtos.pedidos_dto import CalculoPedidoDTO
 from application.services.dtos.pedidos_query_dto import PedidoQuery
@@ -23,13 +20,13 @@ from application.services.dtos.pedidos_query_dto import PedidoQuery
 class PedidoService:
     def __init__(
         self,
-        repo: Optional[PedidoRepository] = None,
-        cuentas: Optional[CuentaRepository] = None,
-        platillos: Optional[PlatilloRepository] = None,
+        repo,
+        cuentas,
+        platillos,
     ):
-        self.repo = repo if repo is not None else pedido_repo
-        self.cuentas = cuentas if cuentas is not None else cuenta_repo
-        self.platillos = platillos if platillos is not None else platillo_repo
+        self.repo = repo
+        self.cuentas = cuentas
+        self.platillos = platillos
 
     # ---------- utilidades ----------
     def _obtener_o_404(self, pedido_id: int) -> Pedido:

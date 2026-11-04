@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from domain.cuentas_domain import Cuenta
-from repositories.base_repo import InMemoryRepository
+from infrastructure.repositories.in_memory.base_repo import InMemoryRepository
 
 
 class CuentaRepository(InMemoryRepository[Cuenta]):
