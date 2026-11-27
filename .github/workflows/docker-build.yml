@@ -32,4 +32,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ steps.owner.outputs.lc }}/imagen-usuario:latest
+          tags: ghcr.io/${{ steps.owner.outputs.lc }}/foodcart_db:latest
