@@ -30,6 +30,6 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./
           push: true
           tags: ghcr.io/${{ steps.owner.outputs.lc }}/foodcart_db:latest
